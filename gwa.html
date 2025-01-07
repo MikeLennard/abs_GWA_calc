@@ -1,0 +1,166 @@
+<html>
+<head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #ffffff;
+            text-shadow: 2px 2px 5px rgb(0, 0, 0);
+            background-image: url(pic1.jpg);
+            font-weight: bold;
+            background-size: cover;
+            background-position: center;
+            margin: 0;
+            padding: 0;
+        }
+        h1 {
+            text-align: center;
+            color: #ffffff;
+            margin-top: 50px;
+            font-size: 2.5rem;
+        }
+        #calculator {
+            max-width: 500px;
+            margin: 50px auto;
+            padding: 30px;
+            border: 1px solid #333333;
+            border-radius: 10px;
+            background-color: #FFFFFF;
+            background-image: url(pic.jpg);
+            background-size: cover;
+            background-position: center;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+        }
+        .input-group {
+            margin-bottom: 20px;
+        }
+        .input-label {
+            display: inline-block;
+            width: 150px;
+            font-weight: bold;
+            text-shadow: 2px 2px 5px rgb(0, 0, 0);
+            color: #d4d4d4;
+            font-size: 1.2rem;
+        }
+        .input-field {
+            width: calc(100% - 160px);
+            padding: 10px;
+            border: 1px solid #cccccc;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+        .subject-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .subject-container {
+            flex: 0 0 calc(50% - 10px);
+        }
+        #calculate-btn {
+            display: block;
+            width: 100%;
+            margin-top: 20px;
+            padding: 15px;
+            font-size: 1.2rem;
+            text-align: center;
+            background-color: #333333;
+            text-shadow: 2px 2px 5px rgb(0, 0, 0);
+            color: #FFFFFF;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        #result {
+            margin-top: 20px;
+            text-align: center;
+            color: #ffffff;
+            font-weight: bold;
+            text-shadow: 2px 2px 5px rgb(0, 0, 0);
+            font-size: 1.5rem;
+        }
+    </style>
+    <title>GWA Calculator</title>
+</head>
+<body>
+    <h1>GWA Calculator</h1>
+    <div id="calculator">
+        <div class="input-group">
+            <label class="input-label" for="subject-count-input">Number of Subjects:</label>
+            <input type="number" class="input-field" id="subject-count-input">
+        </div>
+        <div id="subjects-container"></div>
+        <button id="calculate-btn">Calculate</button>
+        <div id="result"></div>
+    </div>
+    <script>
+        document.getElementById('subject-count-input').addEventListener('change', function() {
+            var subjectCount = this.value;
+            var subjectsContainer = document.getElementById('subjects-container');
+            subjectsContainer.innerHTML = "";
+
+            for (var i = 1; i <= subjectCount; i++) {
+                var subjectRow = document.createElement('div');
+                subjectRow.classList.add('input-group', 'subject-row');
+
+                var subjectLabel = document.createElement('label');
+                subjectLabel.classList.add('input-label');
+                subjectLabel.textContent = 'Subject ' + i + ':';
+                subjectRow.appendChild(subjectLabel);
+
+                var subjectContainer = document.createElement('div');
+                subjectContainer.classList.add('subject-container');
+
+                var unitInput = document.createElement('input');
+                unitInput.type = 'number';
+                unitInput.classList.add('input-field');
+                unitInput.placeholder = 'Units';
+                subjectContainer.appendChild(unitInput);
+
+                var gradeInput = document.createElement('input');
+                gradeInput.type = 'number';
+                gradeInput.step = '0.01';
+                gradeInput.classList.add('input-field');
+                gradeInput.placeholder = 'Grade';
+                subjectContainer.appendChild(gradeInput);
+
+                subjectRow.appendChild(subjectContainer);
+
+                subjectsContainer.appendChild(subjectRow);
+            }
+        });
+
+        document.getElementById('calculate-btn').addEventListener('click', function() {
+            var subjectsContainer = document.getElementById('subjects-container');
+            var subjectRows = subjectsContainer.getElementsByClassName('subject-row');
+
+            var totalUnits = 0;
+            var totalGrades = 0;
+
+            for (var i = 0; i < subjectRows.length; i++) {
+                var unitInput = subjectRows[i].querySelector('.input-field:first-child');
+                var gradeInput = subjectRows[i].querySelector('.input-field:last-child');
+
+                if (unitInput.value && gradeInput.value) {
+                    totalUnits += parseFloat(unitInput.value);
+                    totalGrades += parseFloat(unitInput.value) * parseFloat(gradeInput.value);
+                }
+            }
+
+            var gwa = totalGrades / totalUnits;
+            var resultText = "GWA: " + gwa.toFixed(2);
+
+            if (gwa >= 1 && gwa <= 1.50) {
+                resultText += " - University Scholar";
+            } else if (gwa >= 1.51 && gwa <= 1.75) {
+                resultText += " - College Scholar";
+            } else if (gwa >= 1.76 && gwa <= 2.00) {
+                resultText += " - Dean's Lister";
+            }
+
+            document.getElementById('result').innerHTML = resultText;
+        });
+    </script>
+</body>
+</html>
